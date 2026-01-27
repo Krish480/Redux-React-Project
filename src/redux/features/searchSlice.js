@@ -1,5 +1,6 @@
+import { createSlice } from "@reduxjs/toolkit"
 
-export const searchSlice = creatSlice({
+export const searchSlice = createSlice({
     name: 'search',
     initialState: {
         query: '',
@@ -9,17 +10,21 @@ export const searchSlice = creatSlice({
         error: null
     },
     reducers: {
-        setQuerty(state, action){
+        setQuery(state, action){
             state.query = action.payload
+            state.results = []
+            state.error = null
         },
         setActiveTabs(state, action){
             state.activeTab = action.payload
+            state.results = []
+            state.error = null
         },
         setResults(state, action){
             state.results = action.payload
             state.loading = false
         },
-        setLoading(state, action){
+        setLoading(state){
             state.loading = true
             state.error = null
             
@@ -35,6 +40,6 @@ export const searchSlice = creatSlice({
     }
 })
 
-export const { setQuery, setActiveTab, setResults, setLoading, setError, clearResults } = searchSlice.actions
+export const { setQuery, setActiveTabs, setResults, setLoading, setError, clearResults } = searchSlice.actions
 
 export default searchSlice.reducer    
