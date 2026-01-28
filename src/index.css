@@ -6,3 +6,7 @@ body {
     width: 100%;
     background-color: #030712;
 }
+
+#title{
+    background: linear-gradient(transparent, black);
+}
