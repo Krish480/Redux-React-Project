@@ -19,38 +19,40 @@ const ResusltGrid = () => {
         let data = []
         if (activeTab === 'photos') {
           let response = await fetchPhotos(query)
-
           // Normalization
           data = response.results.map((item) => ({
             id: item.id,
             type: 'photo',
             title: item.alt_description,
             thumbnail: item.urls.small,
-            src: item.urls.full
+            src: item.urls.full,
+            url: item.links.html
           }))
         }
         else if (activeTab === 'videos') {
           let response = await fetchVideos(query)
-
+          console.log(response.videos)
           // Normalization
           data = response.videos.map((item) => ({
             id: item.id,
             type: 'video',
             title: item.user.name || 'video',
             thumbnail: item.image,
-            src: item.video_files[0].link
+            src: item.video_files[0].link,
+            url: item.url
           }))
         }
         else if (activeTab === "GIFs") {
           let response = await fetchGIF(query)
-
+          
           // Normalization
           data = response.data.data.map((item) => ({
             id: item.id,
             type: 'gif',
             title: item.title || 'GIF',
             thumbnail: item.images.fixed_height.url,
-            src: item.images.original.url
+            src: item.images.original.url,
+            url: item.url
           }))
         }
         dispatch(setResults(data))
