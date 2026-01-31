@@ -1,31 +1,40 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { addCollection, addToast } from '../redux/features/collectionSlice'
 
 const ResultCard = ({ item }) => {
   const videoRf = useRef(null)
   const [play, setPlay] = useState(false)
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    if(item.type !== "video") return;
+    if (item.type !== "video") return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if(entry.isIntersecting){
+        if (entry.isIntersecting) {
           setPlay(true)
         } else {
           setPlay(false);
         }
       },
-      {threshold: 0.5}
+      { threshold: 0.5 }
     );
 
-    if(videoRf.current) observer.observe(videoRf.current);
+    if (videoRf.current) observer.observe(videoRf.current);
 
     return () => observer.disconnect();
-  },[item.type])
+  }, [item.type])
+
+  const addToCollection = (item) => {
+    dispatch(addCollection(item))
+    dispatch(addToast(item))
+    console.log("Item added")
+  }
 
   return (
 
-    <div className=' w-full relative h-80 bg-white rounded'>
+    <div className=' w-full relative h-96 bg-white rounded-xl overflow-hidden'>
       <a href={item.url} target='_blank' rel='noreferrer'>
         <div className='h-full'>
           {item.type == "photo" ? <img
@@ -45,7 +54,7 @@ const ResultCard = ({ item }) => {
 
           {item.type == "video" ? <video
             ref={videoRf}
-            autoPlay = {play}
+            autoPlay={play}
             loop
             muted
             playsInline
@@ -58,9 +67,13 @@ const ResultCard = ({ item }) => {
         </div>
       </a>
 
-      <div id='title' className='absolute bottom-0 flex justify-between items-center p-4 w-full px-6 py-10'>
+      <div className='absolute gap-3 bottom-0 flex justify-between items-center px-4 w-full py-6 bg-gradient-to-t from-black/90 to-transparent'>
         <h2 className='text-lg font-semibold capitalize'>{item.title}</h2>
-        <button className='text-lg bg-blue-600 px-3 py-2 cursor-pointer rounded'><i class="fa-regular fa-bookmark"></i></button>
+        <button
+          onClick={() => {
+            addToCollection(item)
+          }}
+          className='text-lg bg-blue-600 px-3 py-1 active:scale-90 cursor-pointer rounded'><i class="fa-regular fa-bookmark"></i></button>
       </div>
     </div>
   )
